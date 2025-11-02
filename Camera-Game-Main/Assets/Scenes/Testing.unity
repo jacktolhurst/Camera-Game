@@ -820,6 +820,8 @@ GameObject:
   - component: {fileID: 1110556566}
   - component: {fileID: 1110556565}
   - component: {fileID: 1110556564}
+  - component: {fileID: 1110556568}
+  - component: {fileID: 1110556567}
   m_Layer: 6
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -862,10 +864,10 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -945,6 +947,38 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1110556567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110556562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 1
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: e764fe1d780220b41838067c26deddb5, type: 2}
+--- !u!114 &1110556568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110556562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76cc5075b0f5fb04fadcf2763c9d406f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  volumeComponent: {fileID: 1110556567}
+  dofTargetObject: {fileID: 237628566}
+  length: 300
 --- !u!1001 &2159677106502097162
 PrefabInstance:
   m_ObjectHideFlags: 0
