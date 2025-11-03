@@ -9,12 +9,15 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private GameObject playerObject;
     [SerializeField] private GameObject cameraObject;
+    [SerializeField] private GameObject cameraPositionObject;
 
     private Transform playerTrans;
     private Rigidbody playerRb;
     private Bounds playerBounds;
 
     private Transform cameraTrans;
+
+    private Transform cameraPositionTrans;
 
     [SerializeField] private LayerMask playerLayerMask;
 
@@ -37,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
         playerBounds = playerObject.GetComponent<Collider>().bounds;
 
         cameraTrans = cameraObject.transform;
+
+        cameraPositionTrans = cameraPositionObject.transform;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -63,8 +68,10 @@ public class PlayerMovement : MonoBehaviour
 
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        cameraObject.transform.localRotation = Quaternion.Euler(xRotation, 0, 0); 
+        cameraTrans.localRotation = Quaternion.Euler(xRotation, yRotation, 0); 
         playerTrans.localRotation = Quaternion.Euler(0, yRotation, 0); 
+
+        cameraTrans.transform.position = Vector3.Lerp(cameraTrans.transform.position, cameraPositionTrans.position, 0.25f);
     }
 
     private void MovePlayer(){
