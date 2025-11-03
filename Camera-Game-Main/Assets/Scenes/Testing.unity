@@ -792,6 +792,7 @@ GameObject:
   m_Component:
   - component: {fileID: 996594314}
   - component: {fileID: 996594315}
+  - component: {fileID: 996594316}
   m_Layer: 6
   m_Name: PlayerController
   m_TagString: Untagged
@@ -841,6 +842,22 @@ MonoBehaviour:
   groundSphereRadius: 0.4
   moveActionName: Move
   jumpActionName: Jump
+--- !u!114 &996594316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996594313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f947bcade1ce73c47bcfc19c0cf0d003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  cameraObject: {fileID: 1110556562}
+  followObject: {fileID: 237628566}
+  currentFov: 60
+  focalLength: 1
 --- !u!1 &1110556562
 GameObject:
   m_ObjectHideFlags: 0

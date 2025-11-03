@@ -27,11 +27,29 @@ public class CameraSettings : MonoBehaviour
             currentInterpolations.Remove("focusLength");
         }
 
-        currentInterpolations.Add("focusDistance", StartCoroutine(LerpParameter(dof.focusDistance, focusDistance, lerpTime, "focusDistance")));
-        currentInterpolations.Add("focusLength", StartCoroutine(LerpParameter(dof.focalLength, focusLength, lerpTime, "focusLength")));
+        currentInterpolations.Add("focusDistance", StartCoroutine(LerpVolumeParameter(dof.focusDistance, focusDistance, lerpTime, "focusDistance")));
+        currentInterpolations.Add("focusLength", StartCoroutine(LerpVolumeParameter(dof.focalLength, focusLength, lerpTime, "focusLength")));
     }
 
-    public IEnumerator LerpParameter<T>(VolumeParameter<T> parameter, T targetValue, float duration, string key){
+    public void SetFieldOfView(Camera camera, float targetFOV, float lerpTime){
+        if(currentInterpolations.ContainsKey("FOV")) {
+            StopCoroutine(currentInterpolations["FOV"]);
+            currentInterpolations.Remove("FOV");
+        }
+
+        currentInterpolations.Add("FOV", StartCoroutine(LerpCameraProperty(camera, "fieldOfView", targetFOV, lerpTime, "FOV")));
+    }
+
+    public void AddFieldOfView(Camera camera, float addedFov, float lerpTime){
+        if(currentInterpolations.ContainsKey("FOV")) {
+            StopCoroutine(currentInterpolations["FOV"]);
+            currentInterpolations.Remove("FOV");
+        }
+
+        currentInterpolations.Add("FOV", StartCoroutine(LerpCameraProperty(camera, "fieldOfView", camera.fieldOfView + addedFov, lerpTime, "FOV")));
+    }
+
+    public IEnumerator LerpVolumeParameter<T>(VolumeParameter<T> parameter, T targetValue, float duration, string key){
         float elapsed = 0f;
         T startValue = parameter.value;
 
@@ -39,7 +57,7 @@ public class CameraSettings : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
             
-            parameter.value = LerpValue(startValue, targetValue, t);
+            parameter.value = LerpVolumeParameterValue(startValue, targetValue, t);
 
             yield return null;
         }
@@ -51,7 +69,7 @@ public class CameraSettings : MonoBehaviour
         }
     }
 
-    private T LerpValue<T>(T start, T end, float t){
+    private T LerpVolumeParameterValue<T>(T start, T end, float t){
         if (typeof(T) == typeof(float)) return (T)(object)Mathf.Lerp((float)(object)start, (float)(object)end, t);
 
         if (typeof(T) == typeof(Color)) return (T)(object)Color.Lerp((Color)(object)start, (Color)(object)end, t);
@@ -64,4 +82,45 @@ public class CameraSettings : MonoBehaviour
 
         return end; 
     }
+
+    public IEnumerator LerpCameraProperty(Camera camera, string propertyName, float targetValue, float duration, string key){
+        float elapsed = 0f;
+        float startValue = GetCameraPropertyValue(camera, propertyName);
+    
+        while (elapsed < duration){
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            float currentValue = Mathf.Lerp(startValue, targetValue, t);
+            SetCameraPropertyValue(camera, propertyName, currentValue);
+
+            yield return null;
+        }
+
+        SetCameraPropertyValue(camera, propertyName, targetValue);
+
+        if(currentInterpolations.ContainsKey(key)){
+            currentInterpolations.Remove(key);
+        }
+    }
+
+    private float GetCameraPropertyValue(Camera camera, string propertyName){
+        switch(propertyName){
+            case "fieldOfView": return camera.fieldOfView;
+            case "nearClipPlane": return camera.nearClipPlane;
+            case "farClipPlane": return camera.farClipPlane;
+            case "orthographicSize": return camera.orthographicSize;
+            default: return 0f;
+        }
+    }
+
+    private void SetCameraPropertyValue(Camera camera, string propertyName, float value){
+        switch(propertyName){
+            case "fieldOfView": camera.fieldOfView = value; break;
+            case "nearClipPlane": camera.nearClipPlane = value; break;
+            case "farClipPlane": camera.farClipPlane = value; break;
+            case "orthographicSize": camera.orthographicSize = value; break;
+        }
+    }
+
 }
