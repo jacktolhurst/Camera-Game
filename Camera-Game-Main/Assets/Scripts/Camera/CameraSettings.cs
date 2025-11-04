@@ -9,12 +9,15 @@ public class CameraSettings : MonoBehaviour
     private Volume volumeComponent;
 
     private DepthOfField dof;
+    private FilmGrain filmGrain;
 
     private Dictionary<string, Coroutine> currentInterpolations = new Dictionary<string, Coroutine>();
 
     void Awake(){
         volumeComponent = GetComponent<Volume>();
+
         volumeComponent.profile.TryGet<DepthOfField>(out dof);
+        volumeComponent.profile.TryGet<FilmGrain>(out filmGrain);
     }
 
     public void SetDepthOfField(float focusDistance, float focusLength, float lerpTime){
@@ -29,6 +32,24 @@ public class CameraSettings : MonoBehaviour
 
         currentInterpolations.Add("focusDistance", StartCoroutine(LerpVolumeParameter(dof.focusDistance, focusDistance, lerpTime, "focusDistance")));
         currentInterpolations.Add("focusLength", StartCoroutine(LerpVolumeParameter(dof.focalLength, focusLength, lerpTime, "focusLength")));
+    }
+
+    public void SetFilmGrainIntensity(float intensity, float lerpTime){
+        if(currentInterpolations.ContainsKey("filmGrainIntensity")) {
+            StopCoroutine(currentInterpolations["filmGrainIntensity"]);
+            currentInterpolations.Remove("filmGrainIntensity");
+        }
+
+        currentInterpolations.Add("filmGrainIntensity", StartCoroutine(LerpVolumeParameter(filmGrain.intensity, intensity, lerpTime, "filmGrainIntensity")));
+    }
+
+    public void SetFilmGrainResponse(float response, float lerpTime){
+        if(currentInterpolations.ContainsKey("filmGrainResponse")) {
+            StopCoroutine(currentInterpolations["filmGrainResponse"]);
+            currentInterpolations.Remove("filmGrainResponse");
+        }
+
+        currentInterpolations.Add("filmGrainResponse", StartCoroutine(LerpVolumeParameter(filmGrain.response, response, lerpTime, "filmGrainResponse")));
     }
 
     public void SetFieldOfView(Camera camera, float targetFOV, float lerpTime){
