@@ -484,6 +484,7 @@ GameObject:
   m_Component:
   - component: {fileID: 568278779}
   - component: {fileID: 568278783}
+  - component: {fileID: 568278785}
   - component: {fileID: 568278781}
   - component: {fileID: 568278784}
   - component: {fileID: 568278780}
@@ -521,7 +522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
-  m_IsGlobal: 1
+  m_IsGlobal: 0
   priority: 0
   blendDistance: 0
   weight: 1
@@ -633,6 +634,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76cc5075b0f5fb04fadcf2763c9d406f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraSettings
+--- !u!65 &568278785
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568278778}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.48}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &595158130
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,7 +774,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!136 &595158136
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1100,14 +1122,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   playerCameraObject: {fileID: 1110556562}
+  playerColliderObject: {fileID: 595158130}
   nonHitLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  rotateActionName: Rotate
   leftClickActionName: Grab
+  pullActionName: Pull
+  inspectActionName: Inspect
   reloadTime: 0.1
-  grabDistance: 4
-  grabbedObjectMoveSpeed: 3
-  grabbedObjectThrowSpeed: 7
+  minGrabDistance: 2.5
+  maxGrabDistance: 6
+  grabbedObjectMoveSpeed: 5
+  grabbedObjectThrowSpeed: 3
+  grabbedObjectRotateSpeed: 3
 --- !u!1 &1110556562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,6 +1148,7 @@ GameObject:
   - component: {fileID: 1110556566}
   - component: {fileID: 1110556565}
   - component: {fileID: 1110556564}
+  - component: {fileID: 1110556567}
   m_Layer: 6
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -1165,7 +1194,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1245,6 +1274,23 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1110556567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110556562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 675cd63c2b38a7243a5260d9b1e4bd3d, type: 2}
 --- !u!1 &1384320304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,6 +1303,7 @@ GameObject:
   - component: {fileID: 1384320307}
   - component: {fileID: 1384320306}
   - component: {fileID: 1384320308}
+  - component: {fileID: 1384320309}
   m_Layer: 0
   m_Name: PhysicalCamera
   m_TagString: Untagged
@@ -1351,6 +1398,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1384320309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384320304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a263feb70436c4fb7f88ae2d15f556, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  playerCameraObject: {fileID: 1110556562}
+  inspectDistance: 1
 --- !u!1 &1878578666
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,12 +52,12 @@ public class PlayerMovement : MonoBehaviour
         jumpInput = ActionMapController.instance.FindInputWithName(jumpActionName).AsFloat();
     }
 
-    void Update(){
-        MoveCamera();
-    }
-
     void FixedUpdate(){ 
         MovePlayer();
+    }
+
+    void LateUpdate(){
+        MoveCamera();
     }
 
     private void MoveCamera(){
@@ -69,9 +69,9 @@ public class PlayerMovement : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         cameraTrans.localRotation = Quaternion.Euler(xRotation, yRotation, 0); 
-        playerTrans.localRotation = Quaternion.Euler(0, yRotation, 0); 
 
-        cameraTrans.transform.position = Vector3.Lerp(cameraTrans.transform.position, cameraPositionTrans.position, 0.25f);
+        // cameraTrans.transform.position = Vector3.Lerp(cameraTrans.transform.position, cameraPositionTrans.position, 0.15f); // Only use this if camera jitters
+        cameraTrans.transform.position = cameraPositionTrans.position;
     }
 
     private void MovePlayer(){
@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 moveDir = new Vector3(moveInputRaw.x, 0, moveInputRaw.y);
 
-        Vector3 worldMove = playerTrans.TransformDirection(moveDir);
+        Vector3 worldMove = Quaternion.Euler(0, yRotation, 0) * moveDir;
 
         playerRb.linearVelocity = new Vector3(worldMove.x * moveSpeed, playerRb.linearVelocity.y + (IsGrounded() ? jumpInputRaw * jumpForce : 0),  worldMove.z * moveSpeed);
     }
