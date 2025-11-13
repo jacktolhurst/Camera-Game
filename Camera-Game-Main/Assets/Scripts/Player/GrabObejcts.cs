@@ -95,6 +95,8 @@ public class GrabObejcts : MonoBehaviour
     }
 
     void Update(){
+        lookRay = new Ray(playerCam.transform.position, playerCam.transform.forward);
+
         if(Time.time - reloadTime > lastHitTime && leftClickInput.GetValueRaw() != 0){
             lastHitTime = Time.time;
 
@@ -104,27 +106,25 @@ public class GrabObejcts : MonoBehaviour
         if(grabbedObjectData.obj != null){
             grabDistance = Mathf.Clamp(grabDistance + pullInput.GetValueRaw(), minGrabDistance, maxGrabDistance);
 
-            if(inspectInput.GetValueRaw() != 0){
+            if(inspectInput.ValueChangedDown()){
                 if(grabbedObjectData.inspectScript != null ){
                     if(!grabbedObjectData.inspectScript.inspecting) grabbedObjectData.inspectScript.Inspect();
                     else grabbedObjectData.inspectScript.CloseInspection();
                 }
-                else{
-                    grabDistance = minGrabDistance;
-                }
+                else grabDistance = minGrabDistance;
             }
         }
-
-        lookRay = new Ray(playerCam.transform.position, playerCam.transform.forward);
     }
 
     void FixedUpdate(){
-        if(grabbedObjectData.obj != null) {
+        if(grabbedObjectData.obj != null && !grabbedObjectData.inspectScript.inspecting) {
             MoveGrabbedObject();
         }
     }
 
     private void MoveGrabbedObject(){
+        print("moving object");
+
         Vector3 targetPosition = lookRay.origin + lookRay.direction * grabDistance;
         Vector3 direction = (targetPosition - grabbedObjectData.rb.position).normalized;
         float distance = Vector3.Distance(targetPosition, grabbedObjectData.rb.position);
@@ -144,7 +144,7 @@ public class GrabObejcts : MonoBehaviour
             }
         } 
         else{
-            grabbedObjectData.inspectScript.CloseInspection();
+            if(grabbedObjectData.inspectScript.inspecting) grabbedObjectData.inspectScript.CloseInspection();
             objectData.Delete(playerColliders);
             objectData.rb.linearVelocity = objectData.rb.linearVelocity + lookRay.direction * grabbedObjectThrowSpeed;
         }

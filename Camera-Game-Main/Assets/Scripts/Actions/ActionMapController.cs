@@ -46,15 +46,31 @@ public class ActionMapController : MonoBehaviour
 
     public class Vector2Input : InputHandler{
         private Vector2 valueRaw;
+        private Vector2 lastValueRaw;
 
         public Vector2Input(InputAction action){
             action.performed += context => valueRaw = context.ReadValue<Vector2>();
             action.canceled += context => valueRaw = Vector2.zero;
         }
 
+        public void SetLastValueRaw(Vector2 newValue){
+            lastValueRaw = newValue;
+        }
+
         public Vector2 GetValueRaw(){
             return valueRaw;
         }
+
+        public bool ValueChangedUp(){
+            if(valueRaw == Vector2.zero && lastValueRaw != Vector2.zero) return true;
+            else return false;
+        }
+
+        public bool ValueChangedDown(){
+            if(valueRaw != Vector2.zero && lastValueRaw == Vector2.zero) return true;
+            else return false;
+        }
+
 
         public bool HasInput(){
             return valueRaw != Vector2.zero;
@@ -63,14 +79,29 @@ public class ActionMapController : MonoBehaviour
 
     public class FloatInput : InputHandler{
         private float valueRaw;
+        private float lastValueRaw;
 
         public FloatInput(InputAction action){
             action.performed += context => valueRaw = context.ReadValue<float>();
             action.canceled += context => valueRaw = 0;
         }
 
+        public void SetLastValueRaw(float newValue){
+            lastValueRaw = newValue;
+        }
+
         public float GetValueRaw(){
             return valueRaw;
+        }
+
+        public bool ValueChangedUp(){
+            if(valueRaw == 0 && lastValueRaw != 0) return true;
+            else return false;
+        }
+
+        public bool ValueChangedDown(){
+            if(valueRaw != 0 && lastValueRaw == 0) return true;
+            else return false;
         }
 
         public bool HasInput(){
@@ -98,6 +129,23 @@ public class ActionMapController : MonoBehaviour
 
         foreach(InputBinding inputBinding in inputBindings){
             inputBinding.Initialise(actionSheet, actionMapName);
+        }
+    }
+
+    void LateUpdate(){
+        foreach(InputBinding inputBinding in inputBindings){
+            if(inputBinding.type == InputBinding.InputType.Vector2){
+                Vector2Input handler = inputBinding.AsVector2();
+                if(handler != null){
+                    handler.SetLastValueRaw(handler.GetValueRaw());
+                }
+            }
+            else if(inputBinding.type == InputBinding.InputType.Float){
+                FloatInput handler = inputBinding.AsFloat();
+                if(handler != null){
+                    handler.SetLastValueRaw(handler.GetValueRaw());
+                }
+            }
         }
     }
 

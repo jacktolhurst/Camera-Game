@@ -70,8 +70,8 @@ public class PlayerMovement : MonoBehaviour
 
         cameraTrans.localRotation = Quaternion.Euler(xRotation, yRotation, 0); 
 
-        // cameraTrans.transform.position = Vector3.Lerp(cameraTrans.transform.position, cameraPositionTrans.position, 0.15f); // Only use this if camera jitters
-        cameraTrans.transform.position = cameraPositionTrans.position;
+        // cameraTrans.transform.position = Vector3.Lerp(cameraTrans.transform.position, cameraPositionTrans.position, 10*Time.deltaTime); // Only use this if camera jitters
+        cameraTrans.transform.position = cameraPositionTrans.position; // Only use if camera doesnt jitter
     }
 
     private void MovePlayer(){
